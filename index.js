@@ -42,6 +42,10 @@ app.get('/api/students', (req, res) => {
     res.send(students);
 });
 
+app.get('/api/grades', (req, res) => {
+    res.send(grades);
+});
+
 
 
 app.post('/api/courses', (req, res) => {
@@ -75,6 +79,18 @@ app.post('/api/students', (req, res) => {
 
     students.push(student);
     res.send(student);
+});
+
+app.post('/api/grades', (req, res) => {
+    
+    const grade = {
+        courseid: req.body.courseid,
+        studentid: req.body.studentid,
+        grade: req.body.grade,
+    };
+
+    students.push(grade);
+    res.send(grade);
 });
 
 app.put('/api/courses/:id', (req, res) => {
@@ -112,6 +128,23 @@ app.put('/api/students/:id', (req, res) => {
 
 });
 
+app.put('/api/grades/:courseid/:studentid', (req, res) => {
+    //find course
+    //if it doesnt exist, 404
+    const grade = grades.find((c => c.courseid === parseInt(req.params.courseid)) && (c => c.studentid == parseInt(req.params.studentid)));
+    if(!grade)
+    {
+        res.status(404).send('The grade was not found');
+        return;
+    }
+
+    grade.courseid = req.body.courseid;
+    grade.studentid = req.body.studentid;
+    grade.grade = req.body.grade;
+    res.send(grade);
+
+});
+
 app.delete('/api/courses/:id', (req, res) => {
     //find course, if not there 404
     const course = courses.find(c => c.id === parseInt(req.params.id));
@@ -138,10 +171,26 @@ app.delete('/api/students/:id', (req, res) => {
     }
 
     //delete
-    const index = student.indexOf(student);
+    const index = students.indexOf(student);
     students.splice(index, 1);
 
     res.send(student);
+});
+
+app.delete('/api/grades/:courseid/:studentid', (req, res) => {
+    //find course, if not there 404
+    const grade = grades.find((c => c.courseid === parseInt(req.params.courseid)) && (c => c.studentid == parseInt(req.params.studentid)));
+    if(!grade)
+    {
+        res.status(404).send('The grade was not found');
+        return;
+    }
+
+    //delete
+    const index = grades.indexOf(grade);
+    grades.splice(index, 1);
+
+    res.send(grade);
 });
 
 app.get('/api/courses/:id', (req, res) => {
