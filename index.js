@@ -18,6 +18,18 @@ const courses = [
 
 ];
 
+const grades = [
+    {courseid: 1, studentid: 1, grade: 90},
+    {courseid: 1, studentid: 2, grade: 80},
+    {courseid: 1, studentid: 3, grade: 75},
+    {courseid: 2, studentid: 2, grade: 68},
+    {courseid: 2, studentid: 3, grade: 79},
+    {courseid: 3, studentid: 1, grade: 44},
+    {courseid: 3, studentid: 3, grade: 37},
+
+
+];
+
 app.get('/', (req, res) => {
     res.send('Home');
 });
@@ -29,6 +41,8 @@ app.get('/api/courses', (req, res) => {
 app.get('/api/students', (req, res) => {
     res.send(students);
 });
+
+
 
 app.post('/api/courses', (req, res) => {
     if(!req.body.name || req.body.name.length < 3){
@@ -148,6 +162,16 @@ app.get('/api/students/:id', (req, res) => {
         return;
     }
     res.send(student);
+});
+
+app.get('/api/grades/:courseid', (req, res) => {
+    var grade = grades.filter(c => c.courseid === parseInt(req.params.courseid));
+    if(!grade)
+    {
+        res.status(404).send('The grades was not found');
+        return;
+    }
+    res.send(grade);
 });
 // PORT
 const port = process.env.PORT || 3000;
